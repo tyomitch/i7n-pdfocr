@@ -312,7 +312,7 @@ namespace iText.Pdfocr {
             }
             // how much the original image size changed
             float multiplier = imageData == null ? 1 : imageSize.GetWidth() / PdfCreatorUtil.GetPoints(imageData.GetWidth
-                ());
+                (), imageData.GetDpiX());
             if (layers[1] != null && layers[0] != layers[1]) {
                 canvas.BeginLayer(layers[1]);
             }

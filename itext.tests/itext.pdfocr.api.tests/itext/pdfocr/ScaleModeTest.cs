@@ -87,8 +87,8 @@ namespace iText.Pdfocr {
                 ());
             NUnit.Framework.Assert.IsNotNull(doc);
             ImageData imageData = ImageDataFactory.Create(file.FullName);
-            float imageWidth = GetPoints(imageData.GetWidth());
-            float imageHeight = GetPoints(imageData.GetHeight());
+            float imageWidth = GetPoints(imageData.GetWidth(), imageData.GetDpiX());
+            float imageHeight = GetPoints(imageData.GetHeight(), imageData.GetDpiY());
             float realWidth = doc.GetFirstPage().GetPageSize().GetWidth();
             float realHeight = doc.GetFirstPage().GetPageSize().GetHeight();
             NUnit.Framework.Assert.AreEqual(imageWidth, realWidth, DELTA);
@@ -98,9 +98,10 @@ namespace iText.Pdfocr {
 
         /// <summary>Converts value from pixels to points.</summary>
         /// <param name="pixels">input value in pixels</param>
+        /// <param name="dpi">pixels per inch</param>
         /// <returns>result value in points</returns>
-        protected internal virtual float GetPoints(float pixels) {
-            return pixels * 3f / 4f;
+        protected internal virtual float GetPoints(float pixels, int dpi) {
+            return pixels / dpi * 72;
         }
 
         /// <summary>Retrieve image BBox rectangle from the first page from given PDF document.</summary>

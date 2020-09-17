@@ -35,8 +35,8 @@ using iText.Layout.Renderer;
 
 namespace iText.Pdfocr {
     internal class PdfCreatorUtil {
-        /// <summary>The Constant to convert pixels to points.</summary>
-        internal const float PX_TO_PT = 3f / 4f;
+        /// <summary>DPI to use when not specified in the image.</summary>
+        private const int DEFAULT_DPI = 96;
 
         /// <summary>The Constant for points per inch.</summary>
         private const float POINTS_PER_INCH = 72.0f;
@@ -212,8 +212,8 @@ namespace iText.Pdfocr {
         internal static Rectangle CalculateImageSize(ImageData imageData, ScaleMode scaleMode, Rectangle requiredSize
             ) {
             if (imageData != null) {
-                float imgWidthPt = GetPoints(imageData.GetWidth());
-                float imgHeightPt = GetPoints(imageData.GetHeight());
+                float imgWidthPt = GetPoints(imageData.GetWidth(), imageData.GetDpiX());
+                float imgHeightPt = GetPoints(imageData.GetHeight(), imageData.GetDpiY());
                 // page size will be equal to the image size if page size or
                 // scale mode are not set
                 if (requiredSize == null || scaleMode == null) {
@@ -249,9 +249,12 @@ namespace iText.Pdfocr {
 
         /// <summary>Converts value from pixels to points.</summary>
         /// <param name="pixels">input value in pixels</param>
+        /// <param name="dpi">pixels per inch</param>
         /// <returns>result value in points</returns>
-        internal static float GetPoints(float pixels) {
-            return pixels * PX_TO_PT;
+        internal static float GetPoints(float pixels, int dpi = 0) {
+            if (dpi == 0)
+                dpi = DEFAULT_DPI;
+            return pixels / dpi * POINTS_PER_INCH;
         }
 
         /// <summary>Counts number of pages in the provided tiff image.</summary>
